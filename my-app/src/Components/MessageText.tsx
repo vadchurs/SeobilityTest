@@ -1,14 +1,14 @@
-import React, { ChangeEvent } from "react";
+import React, { ChangeEvent, memo } from "react";
 
 type MessageTextPropsType = {
-    messageText: string
-    onChangeMessageText: (e: ChangeEvent<HTMLTextAreaElement>) => void
-    errorMessageText: string
-}
+  messageText: string;
+  onChangeMessageText: (e: ChangeEvent<HTMLTextAreaElement>) => void;
+  errorMessageText: string;
+};
 
-export const MessageText = (props:MessageTextPropsType) => {
-    return (
-      <div>
+export const MessageText = memo((props: MessageTextPropsType) => {
+  return (
+    <div>
       <textarea
         placeholder="enter your message"
         value={props.messageText}
@@ -18,5 +18,5 @@ export const MessageText = (props:MessageTextPropsType) => {
         <div className="error">{props.errorMessageText}</div>
       )}
     </div>
-    )
-}
+  );
+});

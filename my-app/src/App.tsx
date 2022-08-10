@@ -1,5 +1,6 @@
 import { type } from "os";
 import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { useCallback } from "react";
 import { fakeApi } from "./api/api";
 import "./App.css";
 import { Birth } from "./Components/Birth";
@@ -29,7 +30,7 @@ function App() {
   const [numberText, setNumberText] = useState("");
   const [errorNumberText, setErrorNumberText] = useState("");
   const [birth, setBirth] = useState("");
-  const [errorBirh, setErrorBirth] = useState("");
+  const [errorBirth, setErrorBirth] = useState("");
   const [messageText, setMessageText] = useState("");
   const [errorMessageText, setErrorMessageText] = useState("");
   const [response, setResponse] = useState("");
@@ -48,40 +49,55 @@ function App() {
 
   //Функции инпутов
 
-  const onChangeNameText = (e: ChangeEvent<HTMLInputElement>) => {
-    if (errorNameText) {
-      setErrorNameText("");
-    }
-    setNameText(e.currentTarget.value);
-  };
+  const onChangeNameText = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      if (errorNameText) {
+        setErrorNameText("");
+      }
+      setNameText(e.currentTarget.value);
+    },
+    [nameText]
+  );
 
-  const onChangeEmailText = (e: ChangeEvent<HTMLInputElement>) => {
-    if (errorEmailText) {
-      setErrorEmailText("");
-    }
-    setEmailText(e.currentTarget.value);
-  };
+  const onChangeEmailText = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      if (errorEmailText) {
+        setErrorEmailText("");
+      }
+      setEmailText(e.currentTarget.value);
+    },
+    [emailText]
+  );
 
-  const onChangeNumberText = (e: ChangeEvent<HTMLInputElement>) => {
-    if (errorNumberText) {
-      setErrorNumberText("");
-    }
-    setNumberText(e.currentTarget.value);
-  };
+  const onChangeNumberText = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      if (errorNumberText) {
+        setErrorNumberText("");
+      }
+      setNumberText(e.currentTarget.value);
+    },
+    [numberText]
+  );
 
-  const onChangeBirth = (e: ChangeEvent<HTMLInputElement>) => {
-    if (errorBirh) {
-      setErrorBirth("");
-    }
-    setBirth(e.currentTarget.value);
-  };
+  const onChangeBirth = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      if (errorBirth) {
+        setErrorBirth("");
+      }
+      setBirth(e.currentTarget.value);
+    },
+    [birth]
+  );
 
-  const onChangeMessageText = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    if (errorMessageText) {
-      setErrorMessageText("");
-    }
-    setMessageText(e.currentTarget.value);
-  };
+  const onChangeMessageText = useCallback(
+    (e: ChangeEvent<HTMLTextAreaElement>) => {
+      if (errorMessageText) {
+        setErrorMessageText("");
+      }
+      setMessageText(e.currentTarget.value);
+    },
+    [messageText]
+  );
 
   //Функции валидации
 
@@ -138,6 +154,8 @@ function App() {
   // Главная функция в которой вызываются валидаторы и при
   // отсутсвии ошибок  данные из формы отправляются на сервер в виде объекта
 
+  //Для того чтобы с сервера пришёл результат с ошибкой необходимо в инпуте сообщения отправить цифры
+
   const onSubmitForm = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const regNameText = /^[a-zA-Z]+$/;
@@ -171,19 +189,23 @@ function App() {
     ) {
       const payload = { nameText, emailText, numberText, birth, messageText };
       setIsfetching(true);
-      fakeApi.postFakeApi(payload).then((res) => {
-        setIsfetching(false);
-        setResponse(String(res.message));
-      }).catch(err =>{
-        setResponse(String(err.message))
-        setIsfetching(false);
-      }).finally(()=>{
-        setNameText("");
-        setEmailText("");
-        setNumberText("");
-        setBirth("");
-        setMessageText("");
-      });
+      fakeApi
+        .postFakeApi(payload)
+        .then((res) => {
+          setIsfetching(false);
+          setResponse(String(res.message));
+        })
+        .catch((err) => {
+          setResponse(String(err.message));
+          setIsfetching(false);
+        })
+        .finally(() => {
+          setNameText("");
+          setEmailText("");
+          setNumberText("");
+          setBirth("");
+          setMessageText("");
+        });
     }
   };
 
@@ -211,7 +233,7 @@ function App() {
           <Birth
             birth={birth}
             onChangeBirth={onChangeBirth}
-            errorBirth={errorBirh}
+            errorBirth={errorBirth}
           />
           <MessageText
             messageText={messageText}

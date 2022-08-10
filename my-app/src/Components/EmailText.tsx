@@ -1,4 +1,4 @@
-import React, { ChangeEvent} from "react";
+import React, { ChangeEvent, memo } from "react";
 
 type EmailTextPropsType = {
   emailText: string;
@@ -6,11 +6,18 @@ type EmailTextPropsType = {
   errorEmailText: string;
 };
 
-export const EmailText = (props: EmailTextPropsType) => {
+export const EmailText = memo((props: EmailTextPropsType) => {
   return (
     <div>
-      <input placeholder="enter your email" type={"text"} value={props.emailText} onChange={props.onChangeEmailText} />
-      {props.errorEmailText && <div className="error">{props.errorEmailText}</div>}
+      <input
+        placeholder="enter your email"
+        type={"text"}
+        value={props.emailText}
+        onChange={props.onChangeEmailText}
+      />
+      {props.errorEmailText && (
+        <div className="error">{props.errorEmailText}</div>
+      )}
     </div>
   );
-};
+});
