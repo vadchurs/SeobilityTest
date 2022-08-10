@@ -115,10 +115,10 @@ function App() {
   };
 
   const numberTextValidate = () => {
-    if(!Number(numberText.split("/").join(""))) {
-      setErrorNumberText("Номер введён не правильно")
+    if (!Number(numberText.split("/").join(""))) {
+      setErrorNumberText("Номер введён не правильно");
     }
-  }
+  };
 
   const birthValidate = (): void => {
     if (!dayjs(birth).isValid()) {
@@ -135,8 +135,7 @@ function App() {
     }
   };
 
-
-  // Главная функция в которой вызываются валидаторы и при 
+  // Главная функция в которой вызываются валидаторы и при
   // отсутсвии ошибок  данные из формы отправляются на сервер в виде объекта
 
   const onSubmitForm = (e: FormEvent<HTMLFormElement>) => {
@@ -156,8 +155,6 @@ function App() {
 
     messageTextValidate();
 
-
-
     if (
       arrayName.length === 2 &&
       regNameText.test(arrayName[0]) &&
@@ -169,18 +166,23 @@ function App() {
       regEmail.test(emailText) &&
       messageText.length > 10 &&
       messageText.length < 300 &&
-      dayjs(birth).isValid() && Number(numberText.split("/").join(""))
+      dayjs(birth).isValid() &&
+      Number(numberText.split("/").join(""))
     ) {
       const payload = { nameText, emailText, numberText, birth, messageText };
       setIsfetching(true);
       fakeApi.postFakeApi(payload).then((res) => {
+        setIsfetching(false);
+        setResponse(String(res.message));
+      }).catch(err =>{
+        setResponse(String(err.message))
+        setIsfetching(false);
+      }).finally(()=>{
         setNameText("");
         setEmailText("");
         setNumberText("");
         setBirth("");
         setMessageText("");
-        setIsfetching(false);
-        setResponse(String(res.message));
       });
     }
   };
