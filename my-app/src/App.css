@@ -6,7 +6,8 @@ form {
   width: 600px;
   margin: 50px auto;
   height: 700px;
-  border: 1px solid red;
+  border: 2px solid red;
+  border-radius: 15px;
   display: flex;
   flex-direction: column;
   justify-content: space-around;

@@ -91,7 +91,7 @@ function App() {
   ): void => {
     if (arrayName.length !== 2 || arrayName[0] === "" || arrayName[1] === "") {
       setErrorNameText(
-        "Поле должно состоять из имени и фамилии и одного пробела между ними"
+        "Поле должно состоять из имени фамилии и одного пробела между ними"
       );
     }
     arrayName.forEach((el) => {
@@ -114,6 +114,12 @@ function App() {
     }
   };
 
+  const numberTextValidate = () => {
+    if(!Number(numberText.split("/").join(""))) {
+      setErrorNumberText("Номер введён не правильно")
+    }
+  }
+
   const birthValidate = (): void => {
     if (!dayjs(birth).isValid()) {
       setErrorBirth("Неверно установлен формат даты");
@@ -129,6 +135,7 @@ function App() {
     }
   };
 
+
   // Главная функция в которой вызываются валидаторы и при 
   // отсутсвии ошибок  данные из формы отправляются на сервер в виде объекта
 
@@ -143,9 +150,13 @@ function App() {
 
     emailTextValidate(regEmail);
 
+    numberTextValidate();
+
     birthValidate();
 
     messageTextValidate();
+
+
 
     if (
       arrayName.length === 2 &&
@@ -158,7 +169,7 @@ function App() {
       regEmail.test(emailText) &&
       messageText.length > 10 &&
       messageText.length < 300 &&
-      dayjs(birth).isValid()
+      dayjs(birth).isValid() && Number(numberText.split("/").join(""))
     ) {
       const payload = { nameText, emailText, numberText, birth, messageText };
       setIsfetching(true);
